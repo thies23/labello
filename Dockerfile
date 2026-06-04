@@ -14,8 +14,9 @@ ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
 FROM base_image AS builder
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    yarnpkg curl build-essential && \
-    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+    yarnpkg curl build-essential
+RUN wget https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py
+RUN python get-poetry.py
 WORKDIR $PYSETUP_PATH
 COPY poetry.lock pyproject.toml ./
 COPY src/package.json src/yarn.lock ./
