@@ -15,8 +15,7 @@ FROM base_image AS builder
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     yarnpkg curl build-essential
-ADD https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py /tmp
-RUN python /tmp/get-poetry.py
+RUN curl -sSL https://install.python-poetry.org | python3 -
 WORKDIR $PYSETUP_PATH
 COPY poetry.lock pyproject.toml ./
 COPY src/package.json src/yarn.lock ./
