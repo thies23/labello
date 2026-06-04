@@ -1,5 +1,6 @@
 import logging
 from . import app, label
+from datetime import datetime
 from flask import render_template, send_file, request, jsonify, send_from_directory
 from brother_ql.devicedependent import label_type_specs
 
@@ -15,6 +16,30 @@ def root():
                            spacing=app.config['font_spacing'],
                            labels=label_type_specs)
 
+
+@app.route("/currentdate", methods=["GET"])
+def currentdate():
+    today = datetime.now().strftime("%d.%m.%Y")
+
+    payload = {
+        "halign": "center",
+        "valign": "middle",
+        "text": today,
+        "label_size": "62",
+        "orientation": "normal",
+        "margin_left": "24",
+        "margin_right": "24",
+        "margin_top": "24",
+        "margin_bottom": "24",
+        "font_spacing": "13",
+        "font_name": "OpenDyslexic3",
+        "font_size": "45"
+    }
+
+    with app.test_client() as client:
+        client.post("/print/text", json=payload)
+
+    return f"Triggered print for date: {today}\n"
 
 @app.errorhandler(404)
 def error_404(e):
